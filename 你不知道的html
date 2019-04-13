@@ -1,0 +1,83 @@
+1.安装工具  sublime   前端代码编写工具  需要安装插件 package-control  然后安装 emmet等插件  （安装过程中可能有的插件由于网络问题安装不上，网上搜索下载安装包放到指定目录就可以）
+
+
+2.同源策略：
+    目的： 为保证用户信息安全，防止恶意的网站窃取数据
+    域名 协议 端口 均相同  （不使用跨域手段时。只有同源才能正常访问 否则浏览器会报错）
+    例：  http://www.ckc.com/page.html
+             http://www.ckc.com/dir(同源）
+             http://www.ckc.com:8888/index.html 不同源（端口不一样）
+             http://www.ckc1.com/dir/page.html  不同源(域名不同)
+             https://www.ckc.com/dir/page.html  不同源（协议不同）
+   
+   
+  3.浏览器规定不同源的不能访问对方的cookie ，但是内部的表单提交没有限制（就是说自己写一个form ，给个地址，submit 提交也可以访问别人网站后台接口）
+      cookie：（同源网页才能共享，但是：两个网页一级域名相同，只是二级域名不同，这是通过设置document.domain可以共享cookie）
+          例：http://w1.example.com/a.html  http://w2.example.com/b.html 通过设置document.domain='example.com'; 就可彼此访问cookie
+          
+          
+  4.控制台下查看原素，找到application-storage 其下有
+      localStorage Cookie Indexdb websql  sessionStorage
+      
+        localStorage （同步的，最大容量5M ，存到超过2.5M的时候会出现性能问题，大部分人都喜欢用localStorage 做缓存js）
+        cookie       （10几k，20几k）
+        Indexdb      （50M 异步读取数据，在回调里 需要写sql） 
+        websql       （50M 异步读取数据，在回调里 需要写sql）
+        sessionStorage(后台session，关闭浏览器就没了）
+        
+        
+   5.同源策略限制的对象
+      a.cookie localstorage indexdb 无法读取
+      b.DOM 无法获得（不能获得彼此dom）
+      c.ajax请求不能发送
+      
+   6.怎么突破同源策略？
+    img    iframe  script  jsonp  link
+        令：h5的postMessage（）；方法可以解决跨域（通过iframe 和image）
+    7. html 书写时注意的问题
+      a.尽量少用无语义的的div span
+      b.在语义不明显时，即可使用div和p时，尽量使用p p默认有上下间距，对兼容特殊终端有利
+      c.不要使用纯样式标签b font u ，改用纯css。
+      d.需要强调的文本，可以包含在strong 和em标签中。strong 默认加粗（不要用b）em斜体（不要用i）。语义化
+      e.每个input要使用label，提升用户输入体验
+      f.dl dd dt 语义
+      <dl>
+      <dd>我是什么</dd>
+      <dt>解释上面写的东西</dt>
+      </dl>
+      <ol>  有序列表
+      <li>1.a</li>
+      <li>2.b</li>
+      </ol>
+      <ul>  无序列表
+      <li>2</li>
+      <li>a</li>
+      </ul>
+      
+      g.html5
+              <div class="header>           <header>                
+                <div class="nav></div>          <nav></nav>
+              </div>                        </header>
+              <div class="article">         <article>
+                <p class="section">   ---→      <section>
+                  <h1></h1>                       <h1></h1>
+                  <p></p>                         <p></p>
+                </p>                            </section>      
+                <div class="aside"></div>       <aside></aside>
+              </div>                        </article>
+              <div class="footer"></div>    <footer></footer>
+      
+      上面是由div 到h5 语义化的发展
+      经过长时间的实践，中间部分不一定为文章，目前h5最佳布局：👇
+             <header>
+                <nav></nav>
+             </header>
+            <div>
+              <section>1 floor</section>
+              <section>2 floor</section>
+              <aside></aside>《选用》
+              <address></address>《选用》
+            </div>
+            <footer>
+            </footer>
+     h.尽量少写html 一定要少些（减少dom渲染时间，减少文件大小）
